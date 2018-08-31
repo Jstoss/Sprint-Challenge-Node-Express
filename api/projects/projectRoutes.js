@@ -17,10 +17,18 @@ router.get('/:id', (req, res) => {
           .catch(err => res.status(500).json({ error: "Failed to retrieve Project." }));
 });
 
+//GET actions by project
+router.get('/:id/actions', (req, res) => {
+  projects.getProjectActions(req.params.id)
+          .then(actions => res.status(200).json(actions))
+          .catch(err => res.status(500).json({ error: "Failed to retrieve Project's Actions" }));
+});
+
+//POST new project, requires name and description
 router.post('/', (req, res) => {
   const { name, description, completed } = req.body;
 
-  if(!name || !description) res.status(422).json({ message: "A name and description is required" });
+  if(!name || !description) return res.status(422).json({ message: "A name and description is required" });
 
   projects.insert(req.body)
           .then(newPrj => res.status(200).json(newPrj))
